@@ -187,7 +187,7 @@ pipeline {
                                 
                        sh '''
                           check() {
-                             echo "Applied Requests and Limits"
+                             echo "Applied Requests and Limits on nodes"
                              kubectl get nodes --no-headers | awk '(NR>1)' | awk '{print $1}' | xargs -I {} sh -c 'echo {}; kubectl describe node {} | grep Allocated \
                              -A 5 | grep -ve Event -ve Allocated -ve percent -ve -- ; echo'
                              applied_cpu=`kubectl get nodes --no-headers | awk '(NR>1)' | awk '{print $1}' | xargs -I {} sh -c 'echo {}; kubectl describe node {} | grep Allocated \
@@ -225,7 +225,7 @@ pipeline {
                                  i=$(( i+1 ))
                                  echo " "
                               done
-                              echo "Requested resources by user"
+                              echo "Requested resources by user from values.yaml"
                               cat nginx-app-chart/values.yaml | .local/bin/shyaml get-value resources
                         }
                         ssh -o StrictHostKeyChecking=no jenkins@k8-master "$(typeset -f); check $REPLICAS"
