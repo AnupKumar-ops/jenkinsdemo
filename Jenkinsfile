@@ -316,13 +316,15 @@ pipeline {
                            exit 1
                         else
                            kubectl create quota appquota --hard=limits.cpu=$2,limits.memory=$3,requests.cpu=$4,requests.memory=$5 -n $1
-                           helm install $9 nginx-app-chart --set image.repository=$6 --set image.tag=$7 --set replicaCount=$8 -n $1
-                        fi
+                        fi   
+                        }
+                        helmInstall() {
+                           helm install $5 nginx-app-chart --set image.repository=$2 --set image.tag=$3 --set replicaCount=$4 --set resources.limits.cpu=$6 --set resources.limits.memory=$7 --set resources.requests.cpu=$8 --set resources.requests.memory=$9 -n $1
                         }
                         rsync -av $WORKSPACE/nginx-app-chart jenkins@k8-master:/home/jenkins/
-                        ssh -o StrictHostKeyChecking=no jenkins@k8-master "$(typeset -f); getinputs \
-                        $KUBE_NAMESPACE $LIMITS_CPU $LIMITS_MEMORY \
-                        $REQ_CPU $REQ_MEMORY $TARGET_REGISTRY_UBUNTU $BUILD_NUMBER $REPLICAS $APPLICATION"
+                        ssh -o StrictHostKeyChecking=no jenkins@k8-master "$(typeset -f); getinputs $KUBE_NAMESPACE $LIMITS_CPU $LIMITS_MEMORY $REQ_CPU $REQ_MEMORY"
+                        ssh -o StrictHostKeyChecking=no jenkins@k8-master "$(typeset -f); helmInstall $KUBE_NAMESPACE $TARGET_REGISTRY_UBUNTU \
+                        $BUILD_NUMBER $REPLICAS $APPLICATION $POD_LIMITS_CPU $POD_LIMITS_MEMORY $POD_REQ_CPU $POD_REQ_MEMORY"
                      '''
             }       
         }                 
