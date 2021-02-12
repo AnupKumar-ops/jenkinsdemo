@@ -233,7 +233,7 @@ pipeline {
                   }       
          }                                                        
         
-        stage('get input'){
+        stage('get resource inputs'){
                steps {
                       script {
                               def userInput4 = input(
