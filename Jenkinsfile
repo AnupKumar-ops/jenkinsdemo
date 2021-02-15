@@ -315,7 +315,7 @@ pipeline {
                         validate() {
                         for node in `ls cpu`
                         do
-                           limit_cpu=`cat $node`
+                           limit_cpu=`cat cpu/$node`
                            a=`echo $1 | awk -F "m" '{print $1}'`
                            b=`echo $3 | awk -F  "m" '{print $1}'`
                            c=`echo $2 | awk -F  "Mi" '{print $1}'`
@@ -327,7 +327,7 @@ pipeline {
                         done
                         for node in `ls mem`
                         do
-                           limit_mem=`cat $node`
+                           limit_mem=`cat mem/$node`
                            if [ $limit_mem -lt $c && $limit_mem -lt $d ]; then
                                 echo "memory validation failed"
                                 exit 1
