@@ -258,7 +258,7 @@ pipeline {
                                                                          string(defaultValue: 'app-nginx',
                                                                                          description: 'k8 namespace',
                                                                                          name: 'k8_namespace'), 
-                                                                         string(defaultValue: 'None',
+                                                                         string(defaultValue: 'app-release1',
                                                                                          description: 'application name',
                                                                                          name: 'application'),
                                                          ]
