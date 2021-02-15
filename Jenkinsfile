@@ -318,9 +318,7 @@ pipeline {
                            limit_cpu=`cat cpu/$node`
                            a=`echo $1 | awk -F "m" '{print $1}'`
                            b=`echo $3 | awk -F  "m" '{print $1}'`
-                           c=`echo $2 | awk -F  "Mi" '{print $1}'`
-                           d=`echo $4 | awk -F  "Mi" '{print $1}'`
-                           if [[ "$limit_cpu" -lt "$a" && "$limit_cpu" -lt "$b"  ]]; then
+                           if [[ "$a" -gt "$limit_cpu" || "$b" -gt "$limit_cpu"  ]]; then
                                echo "cpu validation failed"
                                exit 1
                            fi
@@ -328,7 +326,9 @@ pipeline {
                         for node in `ls mem`
                         do
                            limit_mem=`cat mem/$node`
-                           if [[ "$limit_mem" -lt "$c" && "$limit_mem" -lt "$d" ]]; then
+                           c=`echo $2 | awk -F  "Mi" '{print $1}'`
+                           d=`echo $4 | awk -F  "Mi" '{print $1}'`
+                           if [[ "$c" -gt "$limit_mem" && "$d" -gt "$limit_mem" ]]; then
                                 echo "memory validation failed"
                                 exit 1
                            fi
@@ -348,7 +348,7 @@ pipeline {
                         }
                         rsync -av $WORKSPACE/nginx-app-chart jenkins@k8-master:/home/jenkins/
                         ssh -o StrictHostKeyChecking=no jenkins@k8-master "$(typeset -f); validate $POD_LIMITS_CPU $POD_LIMITS_MEMORY $POD_REQ_CPU $POD_REQ_MEMORY"
-                        if [ $? -eq 1 ]; then
+                        if [ $? -ge 1 ]; then
                            echo "validation failed"
                            exit 1
                         fi   
