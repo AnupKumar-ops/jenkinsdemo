@@ -328,7 +328,7 @@ pipeline {
                            limit_mem=`cat mem/$node`
                            c=`echo $2 | awk -F  "Mi" '{print $1}'`
                            d=`echo $4 | awk -F  "Mi" '{print $1}'`
-                           if [[ "$c" -gt "$limit_mem" && "$d" -gt "$limit_mem" ]]; then
+                           if [[ "$c" -gt "$limit_mem" || "$d" -gt "$limit_mem" ]]; then
                                 echo "memory validation failed"
                                 exit 1
                            fi
