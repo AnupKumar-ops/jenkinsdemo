@@ -267,16 +267,16 @@ pipeline {
                                      id: 'userInput5', message: 'Enter pod Resource details:?',
                                                           parameters: [
         
-                                                                         string(defaultValue: '1',
+                                                                         string(defaultValue: '120m',
                                                                                          description: 'CPU LIMITS',
                                                                                          name: 'cpu_limits'),                        
-                                                                         string(defaultValue: '1Gi',
+                                                                         string(defaultValue: '128Mi',
                                                                                          description: 'MEMORY LIMITS',
                                                                                          name: 'memory_limits'), 
-                                                                         string(defaultValue: '500m',
+                                                                         string(defaultValue: '60m',
                                                                                          description: 'CPU REQUESTS',
                                                                                          name: 'cpu_requests'),
-                                                                         string(defaultValue: '500Mi',
+                                                                         string(defaultValue: '64Mi',
                                                                                          description: 'MEMORY REQUESTS',
                                                                                          name: 'memory_requests'),
                                                           ]
@@ -351,6 +351,7 @@ pipeline {
                         if [ $? -eq 1 ]; then
                            echo "validation failed"
                            exit 1
+                        fi   
                         ssh -o StrictHostKeyChecking=no jenkins@k8-master "$(typeset -f); getinputs $KUBE_NAMESPACE $LIMITS_CPU $LIMITS_MEMORY $REQ_CPU $REQ_MEMORY"
                         ssh -o StrictHostKeyChecking=no jenkins@k8-master "$(typeset -f); helmInstall $KUBE_NAMESPACE $TARGET_REGISTRY_UBUNTU \
                         $BUILD_NUMBER $REPLICAS $APPLICATION $POD_LIMITS_CPU $POD_LIMITS_MEMORY $POD_REQ_CPU $POD_REQ_MEMORY"
