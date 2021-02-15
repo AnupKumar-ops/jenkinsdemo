@@ -10,7 +10,7 @@ def SourceGitRepo                = "https://github.com/AnupKumar-ops/jenkinsdemo
 def VendorName                   = "Cisco"
 def Product                      = "VNF"
 def Version                      = "4.0"
-def upload_filepath              = "http://35.202.168.85:8082/artifactory/${VendorName}/${Product}/${Version}"
+def upload_filepath              = "http://34.68.80.74:8082/artifactory/${VendorName}/${Product}/${Version}"
 def SourceRegistry               = "hub.docker.com"
 def TargetRegistry               = "docker.io/963287/myrepo"
 def TargetRegistryUbuntu         = "963287/myrepo" 
@@ -27,7 +27,7 @@ def userInput = input(
                     password(defaultValue: 'None',
                                             description: 'apitoken of Artifactory',
                                             name: 'password'),
-                    string(defaultValue: 'http://35.202.168.85:8082/artifactory/vendor_repo2',
+                    string(defaultValue: 'http://34.68.80.74:8082/artifactory/vendor_repo2',
                                             description: 'download path of files',
                                             name: 'Source_Repository'),
                     string(defaultValue: 'helloworld.war SampleAebApp.war',
