@@ -220,6 +220,9 @@ pipeline {
                                  echo "allocatable_mem:${allocatable_mem}Mi"
                                  cpu_hardlimit=$(echo "$allocatable_cpu/$replicas"| bc)
                                  mem_hardlimit=$(echo "$allocatable_mem/$replicas"| bc)
+                                 mkdir cpu mem 2>/dev/null
+                                 echo "$cpu_hardlimit" > cpu/cpu_hardlimit_$node
+                                 echo "$mem_hardlimit" > mem/mem-hardlimit_$node
                                  echo "cpu_hardlimit:${cpu_hardlimit}m"
                                  echo "mem_hardlimit:${mem_hardlimit}Mi"
                                  i=$(( i+1 ))
