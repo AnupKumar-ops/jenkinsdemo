@@ -320,7 +320,7 @@ pipeline {
                            b=`echo $3 | awk -F  "m" '{print $1}'`
                            c=`echo $2 | awk -F  "Mi" '{print $1}'`
                            d=`echo $4 | awk -F  "Mi" '{print $1}'`
-                           if [ $limit_cpu -lt $a && $limit_cpu -lt $b  ]; then
+                           if [[ "$limit_cpu" -lt "$a" && "$limit_cpu" -lt "$b"  ]]; then
                                echo "cpu validation failed"
                                exit 1
                            fi
@@ -328,7 +328,7 @@ pipeline {
                         for node in `ls mem`
                         do
                            limit_mem=`cat mem/$node`
-                           if [ $limit_mem -lt $c && $limit_mem -lt $d ]; then
+                           if [[ "$limit_mem" -lt "$c" && "$limit_mem" -lt "$d" ]]; then
                                 echo "memory validation failed"
                                 exit 1
                            fi
