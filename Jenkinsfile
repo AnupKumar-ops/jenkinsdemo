@@ -233,7 +233,7 @@ pipeline {
                   }       
          }                                                        
         
-        stage('get resource inputs'){
+        stage('get  K8 resource inputs'){
                steps {
                       script {
                               def userInput4 = input(
