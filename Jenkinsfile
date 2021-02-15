@@ -309,6 +309,24 @@ pipeline {
              }       
                steps {      
                      sh '''
+                        validate() {
+                        for node in `ls cpu`
+                        do
+                           limit_cpu=`cat $node`
+                           if [ $limit_cpu -lt $1 && $limit_cpu -lt $3  ]; then
+                               echo "cpu validation failed"
+                               exit 1
+                           fi
+                        done
+                        for node in `ls mem`
+                        do
+                           limit_mem=`cat $node`
+                           if [ $limit_mem -lt $2 && $limit_mem -lt $4 ]; then
+                                echo "memory validation failed"
+                                exit 1
+                           fi
+                        done
+                        }
                         getinputs() {
                         var=`kubectl create namespace $1`
                         if [ $? -eq 1 ]; then
@@ -322,6 +340,7 @@ pipeline {
                            helm install $5 nginx-app-chart --set image.repository=$2 --set image.tag=$3 --set replicaCount=$4 --set resources.limits.cpu=$6 --set resources.limits.memory=$7 --set resources.requests.cpu=$8 --set resources.requests.memory=$9 -n $1
                         }
                         rsync -av $WORKSPACE/nginx-app-chart jenkins@k8-master:/home/jenkins/
+                        ssh -o StrictHostKeyChecking=no jenkins@k8-master "$(typeset -f); validate $POD_LIMITS_CPU $POD_LIMITS_MEMORY $POD_REQ_CPU $POD_REQ_MEMORY"
                         ssh -o StrictHostKeyChecking=no jenkins@k8-master "$(typeset -f); getinputs $KUBE_NAMESPACE $LIMITS_CPU $LIMITS_MEMORY $REQ_CPU $REQ_MEMORY"
                         ssh -o StrictHostKeyChecking=no jenkins@k8-master "$(typeset -f); helmInstall $KUBE_NAMESPACE $TARGET_REGISTRY_UBUNTU \
                         $BUILD_NUMBER $REPLICAS $APPLICATION $POD_LIMITS_CPU $POD_LIMITS_MEMORY $POD_REQ_CPU $POD_REQ_MEMORY"
